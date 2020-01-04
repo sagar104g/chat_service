@@ -1,15 +1,14 @@
 var express = require('express');  
 var app = express();
 const Sentry = require('@sentry/node');
-var io = require('./services/socket');
-var room = require('./models/socket')(io);
+var server = require('http').createServer(app);
 var config = require('./config/config')
 
 Sentry.init({ dsn: config.SENTRY_DSN });
 app.use(Sentry.Handlers.requestHandler());
 app.use(express.static(__dirname + '/node_modules'));  
 
-app.get('/',function(req,res){
+app.get('/status',function(req,res){
     res.status(200).send({status:'ok'});
 });
 
@@ -20,6 +19,8 @@ app.use(function onError(err, req, res, next) {
   next();
 });
 
-app.listen(5000, function () {
+var httpServer = server.listen(5000, function () {
     console.info("Server is running on 5000 port");
   });
+var io = require('socket.io')(httpServer, { path: '/'});
+var room = require('./models/socket')(io);

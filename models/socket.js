@@ -2,6 +2,21 @@ var auth = require('../models/auth');
 var mongoHandler = require('../models/mongoHandler');
 
 module.exports = function(io) {
+
+    // io.on('connection',function(socket){
+    //     console.log(socket)
+    //     socket.on('join', function(data){
+    //         console.log(data)
+    //     })
+    //     socket.on('leave', function(data){
+    //         io.sockets.emit('leave', data)
+    //         console.log(data)
+    //     })
+    //     socket.on('chat', function(data){
+    //         console.log(data)
+    //     })
+    // })
+   
 	io.on('connection',function(socket){
         console.log("socketId ----")
         console.log(socket)
