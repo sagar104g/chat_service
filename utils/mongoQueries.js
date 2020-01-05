@@ -1,3 +1,5 @@
+var mongoService = require('../services/mongo')
+
 var insertOne = function(dbName, collectionName, insertObject, cb){
 
     var db = mongoService.getMongoConnection(dbName)

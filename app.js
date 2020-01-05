@@ -3,6 +3,7 @@ var app = express();
 const Sentry = require('@sentry/node');
 var server = require('http').createServer(app);
 var config = require('./config/config')
+var mongoConnection = require('./services/mongo')
 
 Sentry.init({ dsn: config.SENTRY_DSN });
 app.use(Sentry.Handlers.requestHandler());
@@ -19,8 +20,12 @@ app.use(function onError(err, req, res, next) {
   next();
 });
 
+Promise.all(mongoConnection.mongoPromise).then( function(){
 var httpServer = server.listen(5000, function () {
     console.info("Server is running on 5000 port");
   });
 var io = require('socket.io')(httpServer, { path: '/'});
 var room = require('./models/socket')(io);
+}).catch(function(err){
+  console.log(err)
+})
